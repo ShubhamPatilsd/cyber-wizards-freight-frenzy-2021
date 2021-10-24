@@ -17,6 +17,8 @@ public class Test extends OpMode
     private DcMotor lbDrive = null;
     private DcMotor rbDrive = null;
 
+    // this is a comment
+
     /*
      * Code to run ONCE when the driver hits INIT
      */
