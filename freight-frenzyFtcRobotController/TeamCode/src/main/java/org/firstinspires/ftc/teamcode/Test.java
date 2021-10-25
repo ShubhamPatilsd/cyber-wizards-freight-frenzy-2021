@@ -4,6 +4,7 @@ import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.util.Range;
 
@@ -16,7 +17,7 @@ public class Test extends OpMode
     private DcMotor rfDrive = null;
     private DcMotor lbDrive = null;
     private DcMotor rbDrive = null;
-
+    private Servo   Dropper = null;
     // this is a comment
 
     /*
@@ -34,6 +35,7 @@ public class Test extends OpMode
         rbDrive = hardwareMap.get(DcMotor.class, "rbDrive");
         lfDrive  = hardwareMap.get(DcMotor.class, "lfDrive");
         lbDrive  = hardwareMap.get(DcMotor.class, "lbDrive");
+        Dropper  = hardwareMap.get(Servo.class, "dropper");
 
         // Most robots need the motor on one side to be reversed to drive forward
         // Reverse the motor that runs backwards when connected directly to the battery
@@ -41,8 +43,7 @@ public class Test extends OpMode
         lbDrive.setDirection(DcMotor.Direction.FORWARD);
         rfDrive.setDirection(DcMotor.Direction.REVERSE);
         rbDrive.setDirection(DcMotor.Direction.REVERSE);
-
-        // Tell the driver that initialization is complete.
+        Dropper.setPosition(1.0);
         telemetry.addData("Status", "Initialized");
     }
 
@@ -79,6 +80,11 @@ public class Test extends OpMode
         // - This uses basic math to combine motions and is easier to drive straight.
         double drive = -gamepad1.left_stick_y;
         double turn  =  gamepad1.right_stick_x;
+        if (gamepad1.a) {
+            Dropper.setPosition(0.0);
+        } else {
+            Dropper.setPosition(1.0);
+        }
         lfPower    = Range.clip(drive + turn, -1.0, 1.0) ;
         lbPower    = Range.clip(drive + turn, -1.0, 1.0) ;
         rfPower   =  Range.clip(drive - turn, -1.0, 1.0) ;
