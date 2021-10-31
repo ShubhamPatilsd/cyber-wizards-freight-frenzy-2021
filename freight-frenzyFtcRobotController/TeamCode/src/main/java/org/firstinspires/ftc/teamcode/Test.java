@@ -18,6 +18,7 @@ public class Test extends OpMode
     private DcMotor lbDrive = null;
     private DcMotor rbDrive = null;
     private Servo   Dropper = null;
+    private DcMotor intakeLifter = null;
     // this is a comment
 
     /*
@@ -36,13 +37,14 @@ public class Test extends OpMode
         lfDrive  = hardwareMap.get(DcMotor.class, "lfDrive");
         lbDrive  = hardwareMap.get(DcMotor.class, "lbDrive");
         Dropper  = hardwareMap.get(Servo.class, "dropper");
-
+        intakeLifter  = hardwareMap.get(DcMotor.class, "lifter");
         // Most robots need the motor on one side to be reversed to drive forward
         // Reverse the motor that runs backwards when connected directly to the battery
         lfDrive.setDirection(DcMotor.Direction.FORWARD);
         lbDrive.setDirection(DcMotor.Direction.FORWARD);
         rfDrive.setDirection(DcMotor.Direction.REVERSE);
         rbDrive.setDirection(DcMotor.Direction.REVERSE);
+        intakeLifter.setDirection(DcMotor.Direction.FORWARD);
         Dropper.setPosition(1.0);
         telemetry.addData("Status", "Initialized");
     }
@@ -84,6 +86,10 @@ public class Test extends OpMode
             Dropper.setPosition(0.0);
         } else {
             Dropper.setPosition(1.0);
+        }
+
+        if(gamepad1.right_trigger>0){
+            intakeLifter.setPower(gamepad1.right_trigger);
         }
         lfPower    = Range.clip(drive + turn, -1.0, 1.0) ;
         lbPower    = Range.clip(drive + turn, -1.0, 1.0) ;
