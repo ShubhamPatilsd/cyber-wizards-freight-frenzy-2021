@@ -4,20 +4,19 @@ import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.util.Range;
 
-@TeleOp(name="Test", group="Iterative Opmode")
-public class Test extends OpMode
+@TeleOp(name="TeleOpProgram", group="Iterative Opmode")
+public class TeleOpProgram extends OpMode
 {
     // Declare OpMode members.
+
+    Robot robot = new Robot();
     private ElapsedTime runtime = new ElapsedTime();
-    private DcMotor lfDrive = null;
-    private DcMotor rfDrive = null;
-    private DcMotor lbDrive = null;
-    private DcMotor rbDrive = null;
-    private Servo   Dropper = null;
+
    // private DcMotor intakeLifter = null;
     // this is a comment
 
@@ -28,25 +27,13 @@ public class Test extends OpMode
     public void init() {
         telemetry.addData("Status", "Initialized");
 
+        robot.init(hardwareMap);
+
         // Initialize the hardware variables. Note that the strings used here as parameters
         // to 'get' must correspond to the names assigned during the robot configuration
         // step (using the FTC Robot Controller app on the phone).
         
-        rfDrive = hardwareMap.get(DcMotor.class, "rfDrive");
-        rbDrive = hardwareMap.get(DcMotor.class, "rbDrive");
-        lfDrive  = hardwareMap.get(DcMotor.class, "lfDrive");
-        lbDrive  = hardwareMap.get(DcMotor.class, "lbDrive");
-        Dropper  = hardwareMap.get(Servo.class, "dropper");
-        //intakeLifter  = hardwareMap.get(DcMotor.class, "lifter");
-        // Most robots need the motor on one side to be reversed to drive forward
-        // Reverse the motor that runs backwards when connected directly to the battery
-        lfDrive.setDirection(DcMotor.Direction.FORWARD);
-        lbDrive.setDirection(DcMotor.Direction.FORWARD);
-        rfDrive.setDirection(DcMotor.Direction.REVERSE);
-        rbDrive.setDirection(DcMotor.Direction.REVERSE);
-       // intakeLifter.setDirection(DcMotor.Direction.FORWARD);
-        Dropper.setPosition(1.0);
-        telemetry.addData("Status", "Initialized");
+
     }
 
     /*
@@ -80,12 +67,18 @@ public class Test extends OpMode
 
         // POV Mode uses left stick to go forward, and right stick to turn.
         // - This uses basic math to combine motions and is easier to drive straight.
-        double drive = -gamepad1.left_stick_y;
+        double drive = gamepad1.left_stick_y;
         double turn  =  gamepad1.right_stick_x;
         if (gamepad1.a) {
-            Dropper.setPosition(0.0);
+            robot.Dropper.setPosition(0.0);
         } else {
-            Dropper.setPosition(1.0);
+            robot.Dropper.setPosition(1.0);
+        }
+
+        if(gamepad1.b){
+            robot.wrist.setPosition(0.0);
+        }else{
+            robot.wrist.setPosition(1.0);
         }
 
 //        if(gamepad1.right_trigger>0){
@@ -101,10 +94,22 @@ public class Test extends OpMode
         // rightPower = -gamepad1.right_stick_y ;
 
         // Send calculated power to wheels
-        lfDrive.setPower(lfPower);
-        lbDrive.setPower(lbPower);
-        rbDrive.setPower(rbPower);
-        rfDrive.setPower(rfPower);
+        robot.lfDrive.setPower(lfPower);
+        robot.lbDrive.setPower(lbPower);
+        robot.rbDrive.setPower(rbPower);
+        robot.rfDrive.setPower(rfPower);
+
+
+        robot.arm.setPower(gamepad1.right_trigger - gamepad1.left_trigger);
+
+
+        if(gamepad1.dpad_up){
+            robot.carousel.setPower(1.0);
+        }else{
+            robot.carousel.setPower(0.0);
+        }
+
+
 
         // Show the elapsed game time and wheel power.
         telemetry.addData("Status", "Run Time: " + runtime.toString());
