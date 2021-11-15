@@ -69,17 +69,10 @@ public class TeleOpProgram extends OpMode
         // - This uses basic math to combine motions and is easier to drive straight.
         double drive = gamepad1.left_stick_y;
         double turn  =  gamepad1.right_stick_x;
-        if (gamepad1.a) {
-            robot.Dropper.setPosition(0.0);
-        } else {
-            robot.Dropper.setPosition(1.0);
-        }
+        
+        robot.Dropper.setPosition((gamepad1.a) ? 0.0 : 1.0);
 
-        if(gamepad1.b){
-            robot.wrist.setPosition(0.0);
-        }else{
-            robot.wrist.setPosition(1.0);
-        }
+        robot.wrist.setPosition((gamepad1.b) ? 0.0 : 1.0);
 
 //        if(gamepad1.right_trigger>0){
 //            intakeLifter.setPower(gamepad1.right_trigger);
@@ -103,12 +96,7 @@ public class TeleOpProgram extends OpMode
         robot.arm.setPower(gamepad1.right_trigger - gamepad1.left_trigger);
 
 
-        if(gamepad1.dpad_up){
-            robot.carousel.setPower(1.0);
-        }else{
-            robot.carousel.setPower(0.0);
-        }
-
+        robot.carousel.setPower((gamepad1.dpad_up) ? 1.0 : 0.0);
 
 
         // Show the elapsed game time and wheel power.
