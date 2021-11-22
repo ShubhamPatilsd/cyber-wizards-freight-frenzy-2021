@@ -16,7 +16,7 @@ public class TeleOpProgram extends OpMode
 
     Robot robot = new Robot();
     private ElapsedTime runtime = new ElapsedTime();
-
+    double x = 1.0;
    // private DcMotor intakeLifter = null;
     // this is a comment
 
@@ -57,46 +57,51 @@ public class TeleOpProgram extends OpMode
     @Override
     public void loop() {
         // Setup a variable for each drive wheel to save power level for telemetry
-        double lfPower;
-        double lbPower;
-        double rfPower;
-        double rbPower;
 
-        // Choose to drive using either Tank Mode, or POV Mode
-        // Comment out the method that's not used.  The default below is POV.
-
-        // POV Mode uses left stick to go forward, and right stick to turn.
-        // - This uses basic math to combine motions and is easier to drive straight.
-        double drive = gamepad1.left_stick_y;
-        double turn  =  gamepad1.right_stick_x;
-        
-        robot.Dropper.setPosition((gamepad1.a) ? 0.0 : 1.0);
-
-        robot.wrist.setPosition((gamepad1.b) ? 0.0 : 1.0);
-
-//        if(gamepad1.right_trigger>0){
-//            intakeLifter.setPower(gamepad1.right_trigger);
-//        }
-        lfPower    = Range.clip(drive + turn, -1.0, 1.0) ;
-        lbPower    = Range.clip(drive + turn, -1.0, 1.0) ;
-        rfPower   =  Range.clip(drive - turn, -1.0, 1.0) ;
-        rbPower   =  Range.clip(drive - turn, -1.0, 1.0) ;
-        // Tank Mode uses one stick to control each wheel.
-        // - This requires no math, but it is hard to drive forward slowly and keep straight.
-        // leftPower  = -gamepad1.left_stick_y ;
-        // rightPower = -gamepad1.right_stick_y ;
-
-        // Send calculated power to wheels
-        robot.lfDrive.setPower(lfPower);
-        robot.lbDrive.setPower(lbPower);
-        robot.rbDrive.setPower(rbPower);
-        robot.rfDrive.setPower(rfPower);
+        if(gamepad1.left_stick_y<0){
+            robot.lbDrive.setPower(-x);
+            robot.rbDrive.setPower(-x);
+            robot.lfDrive.setPower(-x);
+            robot.rfDrive.setPower(-x);
+        }else if(gamepad1.left_stick_y>0) {
+            robot.lbDrive.setPower(x);
+            robot.rbDrive.setPower(x);
+            robot.lfDrive.setPower(x);
+            robot.rfDrive.setPower(x);
+        } else if(gamepad1.left_trigger>0){
+            robot.lbDrive.setPower(x);
+            robot.rbDrive.setPower(-x);
+            robot.lfDrive.setPower(-x);
+            robot.rfDrive.setPower(x);
+        }else if(gamepad1.right_trigger>0){
+            robot.lbDrive.setPower(-x);
+            robot.rbDrive.setPower(x);
+            robot.lfDrive.setPower(x);
+            robot.rfDrive.setPower(-x);
+        }else if(gamepad1.right_stick_x<0){
+            robot.lbDrive.setPower(-x);
+            robot.rbDrive.setPower(x);
+            robot.lfDrive.setPower(-x);
+            robot.rfDrive.setPower(x);
+        }else if(gamepad1.right_stick_x>0){
+            robot.lbDrive.setPower(x);
+            robot.rbDrive.setPower(-x);
+            robot.lfDrive.setPower(x);
+            robot.rfDrive.setPower(-x);
+        } else {
+            robot.lbDrive.setPower(0.0);
+            robot.rbDrive.setPower(0.0);
+            robot.lfDrive.setPower(0.0);
+            robot.rfDrive.setPower(0.0);
+        }
 
 
         robot.arm.setPower(gamepad1.right_trigger - gamepad1.left_trigger);
+        robot.carousel.setPower((gamepad1.dpad_right) ? 1.0 : 0.0);
+        robot.carousel.setPower((gamepad1.dpad_left) ? -1.0 : 0.0);
 
-
-        robot.carousel.setPower((gamepad1.dpad_up) ? 1.0 : 0.0);
+        robot.Dropper.setPosition((gamepad1.a) ? 0.0 : 1.0);
+        robot.wrist.setPosition((gamepad1.b) ? 0.0 : 1.0);
 
 
         // Show the elapsed game time and wheel power.
