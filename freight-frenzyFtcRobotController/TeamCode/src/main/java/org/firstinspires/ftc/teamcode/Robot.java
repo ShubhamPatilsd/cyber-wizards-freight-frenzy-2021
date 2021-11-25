@@ -43,7 +43,7 @@ public class Robot {
         rbDrive.setDirection(DcMotor.Direction.REVERSE);
 
         arm.setDirection(DcMotorSimple.Direction.FORWARD);
-        carousel.setDirection(DcMotorSimple.Direction.FORWARD);
+        carousel.setDirection(DcMotorSimple.Direction.REVERSE);
         // intakeLifter.setDirection(DcMotor.Direction.FORWARD);
         Dropper.setPosition(1.0);
     }

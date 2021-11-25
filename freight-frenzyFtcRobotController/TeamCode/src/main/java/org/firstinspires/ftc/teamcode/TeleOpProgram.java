@@ -70,13 +70,13 @@ public class TeleOpProgram extends OpMode
         double drive = gamepad1.left_stick_y;
         double turn  =  gamepad1.right_stick_x;
         if (gamepad1.a) {
-            robot.Dropper.setPosition(0.0);
+            robot.Dropper.setPosition(0.5);
         } else {
             robot.Dropper.setPosition(1.0);
         }
 
         if(gamepad1.b){
-            robot.wrist.setPosition(0.0);
+            robot.wrist.setPosition(0.5);
         }else{
             robot.wrist.setPosition(1.0);
         }
@@ -100,7 +100,7 @@ public class TeleOpProgram extends OpMode
         robot.rfDrive.setPower(rfPower);
 
 
-        robot.arm.setPower(gamepad1.right_trigger - gamepad1.left_trigger);
+        robot.arm.setPower((gamepad1.right_trigger/2) - (gamepad1.left_trigger/2));
 
 
         if(gamepad1.dpad_up){
