@@ -16,7 +16,7 @@ public class TeleOpProgram extends OpMode
 
     Robot robot = new Robot();
     private ElapsedTime runtime = new ElapsedTime();
-
+    double x = 1.0;
    // private DcMotor intakeLifter = null;
     // this is a comment
 
@@ -79,36 +79,51 @@ public class TeleOpProgram extends OpMode
             robot.wrist.setPosition(0.5);
         }else{
             robot.wrist.setPosition(1.0);
+
+        if(gamepad1.left_stick_y<0){
+            robot.lbDrive.setPower(-x);
+            robot.rbDrive.setPower(-x);
+            robot.lfDrive.setPower(-x);
+            robot.rfDrive.setPower(-x);
+        }else if(gamepad1.left_stick_y>0) {
+            robot.lbDrive.setPower(x);
+            robot.rbDrive.setPower(x);
+            robot.lfDrive.setPower(x);
+            robot.rfDrive.setPower(x);
+        } else if(gamepad1.left_trigger>0){
+            robot.lbDrive.setPower(x);
+            robot.rbDrive.setPower(-x);
+            robot.lfDrive.setPower(-x);
+            robot.rfDrive.setPower(x);
+        }else if(gamepad1.right_trigger>0){
+            robot.lbDrive.setPower(-x);
+            robot.rbDrive.setPower(x);
+            robot.lfDrive.setPower(x);
+            robot.rfDrive.setPower(-x);
+        }else if(gamepad1.right_stick_x<0){
+            robot.lbDrive.setPower(-x);
+            robot.rbDrive.setPower(x);
+            robot.lfDrive.setPower(-x);
+            robot.rfDrive.setPower(x);
+        }else if(gamepad1.right_stick_x>0){
+            robot.lbDrive.setPower(x);
+            robot.rbDrive.setPower(-x);
+            robot.lfDrive.setPower(x);
+            robot.rfDrive.setPower(-x);
+        } else {
+            robot.lbDrive.setPower(0.0);
+            robot.rbDrive.setPower(0.0);
+            robot.lfDrive.setPower(0.0);
+            robot.rfDrive.setPower(0.0);
         }
-
-//        if(gamepad1.right_trigger>0){
-//            intakeLifter.setPower(gamepad1.right_trigger);
-//        }
-        lfPower    = Range.clip(drive + turn, -1.0, 1.0) ;
-        lbPower    = Range.clip(drive + turn, -1.0, 1.0) ;
-        rfPower   =  Range.clip(drive - turn, -1.0, 1.0) ;
-        rbPower   =  Range.clip(drive - turn, -1.0, 1.0) ;
-        // Tank Mode uses one stick to control each wheel.
-        // - This requires no math, but it is hard to drive forward slowly and keep straight.
-        // leftPower  = -gamepad1.left_stick_y ;
-        // rightPower = -gamepad1.right_stick_y ;
-
-        // Send calculated power to wheels
-        robot.lfDrive.setPower(lfPower);
-        robot.lbDrive.setPower(lbPower);
-        robot.rbDrive.setPower(rbPower);
-        robot.rfDrive.setPower(rfPower);
 
 
         robot.arm.setPower((gamepad1.right_trigger/2) - (gamepad1.left_trigger/2));
+        robot.carousel.setPower((gamepad1.dpad_right) ? 1.0 : 0.0);
+        robot.carousel.setPower((gamepad1.dpad_left) ? -1.0 : 0.0);
 
-
-        if(gamepad1.dpad_up){
-            robot.carousel.setPower(1.0);
-        }else{
-            robot.carousel.setPower(0.0);
-        }
-
+        robot.Dropper.setPosition((gamepad1.a) ? 0.0 : 1.0);
+        robot.wrist.setPosition((gamepad1.b) ? 0.0 : 1.0);
 
 
         // Show the elapsed game time and wheel power.
