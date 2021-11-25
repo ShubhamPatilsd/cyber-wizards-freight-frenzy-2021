@@ -16,7 +16,7 @@ public class TeleOpProgram extends OpMode
 
     Robot robot = new Robot();
     private ElapsedTime runtime = new ElapsedTime();
-    double x = 1.0;
+    double xNew = 1.0;
    // private DcMotor intakeLifter = null;
     // this is a comment
 
@@ -69,16 +69,7 @@ public class TeleOpProgram extends OpMode
         // - This uses basic math to combine motions and is easier to drive straight.
         double drive = gamepad1.left_stick_y;
         double turn  =  gamepad1.right_stick_x;
-        if (gamepad1.a) {
-            robot.Dropper.setPosition(0.5);
-        } else {
-            robot.Dropper.setPosition(1.0);
-        }
-
-        if(gamepad1.b){
-            robot.wrist.setPosition(0.5);
-        }else{
-            robot.wrist.setPosition(1.0);
+        double x = 1.0;
 
         if(gamepad1.left_stick_y<0){
             robot.lbDrive.setPower(-x);
@@ -117,18 +108,55 @@ public class TeleOpProgram extends OpMode
             robot.rfDrive.setPower(0.0);
         }
 
+//        double y = gamepad1.left_stick_y; // Remember, this is reversed!
+//        double x = gamepad1.left_stick_x * 1.1; // Counteract imperfect strafing
+//        double rx = gamepad1.right_stick_x;
+//
+//        // Denominator is the largest motor power (absolute value) or 1
+//        // This ensures all the powers maintain the same ratio, but only when
+//        // at least one is out of the range [-1, 1]
+//
+//        if(Math.abs(x)>0.0 && (Math.abs(y)<Math.abs(0.5))){
+//            if(x<0){
+//            robot.lbDrive.setPower(xNew);
+//            robot.rbDrive.setPower(-xNew);
+//            robot.lfDrive.setPower(-xNew);
+//            robot.rfDrive.setPower(xNew);
+//        }else if(x>0){
+//            robot.lbDrive.setPower(-xNew);
+//            robot.rbDrive.setPower(xNew);
+//            robot.lfDrive.setPower(xNew);
+//            robot.rfDrive.setPower(-xNew);
+//        }
+//        }
+//        else{
+//            double denominator = Math.max(Math.abs(y) + Math.abs(x) + Math.abs(rx), 1);
+//            double frontLeftPower = (y + x + rx) / denominator;
+//            double backLeftPower = (y - x + rx) / denominator;
+//            double frontRightPower = (y - x - rx) / denominator;
+//            double backRightPower = (y + x - rx) / denominator;
+//            robot.lfDrive.setPower(frontLeftPower);
+//            robot.lbDrive.setPower(backLeftPower);
+//            robot.rfDrive.setPower(frontRightPower);
+//            robot.rbDrive.setPower(backRightPower);
+//        }
 
-        robot.arm.setPower((gamepad1.right_trigger/2) - (gamepad1.left_trigger/2));
-        robot.carousel.setPower((gamepad1.dpad_right) ? 1.0 : 0.0);
-        robot.carousel.setPower((gamepad1.dpad_left) ? -1.0 : 0.0);
 
-        robot.Dropper.setPosition((gamepad1.a) ? 0.0 : 1.0);
-        robot.wrist.setPosition((gamepad1.b) ? 0.0 : 1.0);
+
+
+
+        robot.arm.setPower((gamepad2.right_trigger/2) - (gamepad2.left_trigger/2));
+        robot.carousel.setPower(((gamepad2.right_bumper) ? 1.0: 0.0)-((gamepad2.left_bumper) ? -1.0: 0.0));
+
+
+        robot.Dropper.setPosition((gamepad2.a) ? 0.0 : 1.0);
+        robot.wrist.setPosition((gamepad2.b) ? 0.0 : 1.0);
 
 
         // Show the elapsed game time and wheel power.
         telemetry.addData("Status", "Run Time: " + runtime.toString());
     }
+
 
     /*
      * Code to run ONCE after the driver hits STOP
@@ -137,4 +165,6 @@ public class TeleOpProgram extends OpMode
     public void stop() {
     }
 
-}
+    }
+
+
