@@ -57,6 +57,10 @@ public class Test extends OpMode
     @Override
     public void loop() {
 
+        robot.lbDrive.setPower(gamepad1.left_stick_y);
+        robot.lfDrive.setPower(gamepad1.left_stick_y);
+        robot.rbDrive.setPower(gamepad1.left_stick_y);
+        robot.rfDrive.setPower(gamepad1.left_stick_y);
 
         if (gamepad1.a) {
             robot.Dropper.setPosition(0.0);

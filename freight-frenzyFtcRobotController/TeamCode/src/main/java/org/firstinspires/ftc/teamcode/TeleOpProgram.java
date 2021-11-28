@@ -54,6 +54,10 @@ public class TeleOpProgram extends OpMode
     /*
      * Code to run REPEATEDLY after the driver hits PLAY but before they hit STOP
      */
+    boolean bumperWasHeld = false;
+    boolean slow = false;
+    String currentMode = "Speed";
+
     @Override
     public void loop() {
         // Setup a variable for each drive wheel to save power level for telemetry
@@ -70,6 +74,46 @@ public class TeleOpProgram extends OpMode
         double drive = gamepad1.left_stick_y;
         double turn  =  gamepad1.right_stick_x;
         double x = 1.0;
+
+
+      //  boolean wasPressed = gamepad1.right_bumper && !bumperWasHeld;
+//
+//        if(wasPressed){
+//
+////            if(slow){
+////                x*=3;
+////                slow = !slow;
+////                currentMode = "Speed";
+////            }else{
+////                x/=3;
+////                slow = !slow;
+////                currentMode = "Precision";
+////            }
+//
+//            currentMode = "Very Amogus";
+//
+//            if(slow){
+//                slow = false;
+//                x=1.0;
+//                currentMode = "Speed";
+//            }else{
+//                slow = true;
+//                x/=3;
+//                currentMode="Precision";
+//            }
+//        }else{
+//            currentMode = "Not Amogus";
+//        }
+//
+//        bumperWasHeld = gamepad1.right_bumper;
+
+        if(gamepad1.right_bumper){
+            x/=3;
+            currentMode = "Precision";
+        }else{
+            x = 1.0;
+            currentMode = "Sped. I am sped";
+        }
 
         if(gamepad1.left_stick_y<0){
             robot.lbDrive.setPower(-x);
@@ -146,8 +190,18 @@ public class TeleOpProgram extends OpMode
 
 
         robot.arm.setPower((gamepad2.right_trigger/2) - (gamepad2.left_trigger/2));
-        robot.carousel.setPower(((gamepad2.right_bumper) ? 1.0: 0.0)-((gamepad2.left_bumper) ? -1.0: 0.0));
+        //robot.carousel.setPower(((gamepad2.right_bumper) ? 1.0: 0.0)-((gamepad2.left_bumper) ? -1.0: 0.0));
+        if(gamepad2.right_bumper){
+            robot.carousel.setPower(1.0);
+        }else{
+            robot.carousel.setPower(0.0);
+        }
 
+        if(gamepad2.left_bumper){
+            robot.carousel.setPower(-1.0);
+        }else{
+            robot.carousel.setPower(0.0);
+        }
 
         robot.Dropper.setPosition((gamepad2.a) ? 0.0 : 1.0);
         robot.wrist.setPosition((gamepad2.b) ? 0.0 : 1.0);
@@ -155,6 +209,8 @@ public class TeleOpProgram extends OpMode
 
         // Show the elapsed game time and wheel power.
         telemetry.addData("Status", "Run Time: " + runtime.toString());
+        telemetry.addData("Current Mode:", currentMode);
+
     }
 
 
