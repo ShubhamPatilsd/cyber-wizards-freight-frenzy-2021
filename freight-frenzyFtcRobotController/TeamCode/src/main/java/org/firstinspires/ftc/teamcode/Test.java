@@ -63,17 +63,17 @@ public class Test extends OpMode
         robot.rfDrive.setPower(gamepad1.left_stick_y);
 
         if (gamepad1.a) {
-            robot.Dropper.setPosition(0.0);
+            robot.Dropper1.setPosition(0.0);
             telemetry.addData("Servo", "Dropper");
         } else {
-            robot.Dropper.setPosition(1.0);
+            robot.Dropper1.setPosition(1.0);
         }
 
         if(gamepad1.b){
-            robot.wrist.setPosition(0.0);
+            robot.Dropper2.setPosition(0.0);
             telemetry.addData("Servo", "Wrist--");
         }else{
-            robot.wrist.setPosition(1.0);
+            robot.Dropper2.setPosition(1.0);
         }
 
 

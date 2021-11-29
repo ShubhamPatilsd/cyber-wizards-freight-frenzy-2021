@@ -203,8 +203,23 @@ public class TeleOpProgram extends OpMode
             robot.carousel.setPower(0.0);
         }
 
-        robot.Dropper.setPosition((gamepad2.a) ? 0.0 : 1.0);
-        robot.wrist.setPosition((gamepad2.b) ? 0.0 : 1.0);
+        if(gamepad2.a){
+            robot.Dropper1.setPosition(0.0);
+            robot.Dropper2.setPosition(0.0);
+        }else {
+            robot.Dropper1.setPosition(0.5);
+            robot.Dropper2.setPosition(0.5);
+        }
+        if(gamepad2.b){
+            robot.Wrist.setPosition(0.0);
+
+        }else {
+            robot.Wrist.setPosition(0.5);
+
+        }
+
+        //robot.Dropper1.setPosition((gamepad2.a) ? 0.0 : 1.0);
+        //robot.Dropper2.setPosition((gamepad2.b) ? 0.0 : 1.0);
 
 
         // Show the elapsed game time and wheel power.

@@ -21,18 +21,23 @@ public class Robot {
     public DcMotor rbDrive = null;
     public DcMotor arm = null;
     public DcMotor carousel = null;
-    public Servo Dropper = null;
-    public Servo wrist = null;
+    public Servo Dropper1 = null;
+    public Servo Dropper2 = null;
+    public Servo Wrist = null;
+
 
     public void init(HardwareMap hardwareMap){
         rfDrive = hardwareMap.get(DcMotor.class, "rfDrive");
         rbDrive = hardwareMap.get(DcMotor.class, "rbDrive");
         lfDrive  = hardwareMap.get(DcMotor.class, "lfDrive");
         lbDrive  = hardwareMap.get(DcMotor.class, "lbDrive");
-        Dropper  = hardwareMap.get(Servo.class, "dropper");
+        Dropper1  = hardwareMap.get(Servo.class, "dropper1");
+        Dropper2 = hardwareMap.get(Servo.class, "dropper2");
+        Wrist = hardwareMap.get(Servo.class, "wrist");
+
+
         arm  = hardwareMap.get(DcMotor.class, "arm");
         carousel  = hardwareMap.get(DcMotor.class, "carousel");
-        wrist = hardwareMap.get(Servo.class, "wrist");
 
         //intakeLifter  = hardwareMap.get(DcMotor.class, "lifter");
         // Most robots need the motor on one side to be reversed to drive forward
@@ -45,7 +50,7 @@ public class Robot {
         arm.setDirection(DcMotorSimple.Direction.FORWARD);
         carousel.setDirection(DcMotorSimple.Direction.REVERSE);
         // intakeLifter.setDirection(DcMotor.Direction.FORWARD);
-        Dropper.setPosition(1.0);
+        //Dropper1.setPosition(1.0);
     }
 
 }
