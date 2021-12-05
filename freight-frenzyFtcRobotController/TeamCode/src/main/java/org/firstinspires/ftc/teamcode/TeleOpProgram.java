@@ -28,6 +28,7 @@ public class TeleOpProgram extends OpMode
         telemetry.addData("Status", "Initialized");
 
         robot.init(hardwareMap);
+        //robot.arm.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
         // Initialize the hardware variables. Note that the strings used here as parameters
         // to 'get' must correspond to the names assigned during the robot configuration
@@ -189,37 +190,35 @@ public class TeleOpProgram extends OpMode
 
 
 
-        robot.arm.setPower((gamepad2.right_trigger/2) - (gamepad2.left_trigger/2));
+        robot.arm.setPower((gamepad2.right_trigger/1.5) - (gamepad2.left_trigger/1.5));
         //robot.carousel.setPower(((gamepad2.right_bumper) ? 1.0: 0.0)-((gamepad2.left_bumper) ? -1.0: 0.0));
-        if(gamepad2.right_bumper){
+        if(gamepad2.dpad_right){
             robot.carousel.setPower(1.0);
         }else{
             robot.carousel.setPower(0.0);
         }
 
-        if(gamepad2.left_bumper){
+        if(gamepad2.dpad_left){
             robot.carousel.setPower(-1.0);
         }else{
             robot.carousel.setPower(0.0);
         }
 
         if(gamepad2.a){
+            robot.Dropper1.setPosition(0.25);
+            robot.Dropper2.setPosition(0.25);
+        }else {
             robot.Dropper1.setPosition(0.0);
             robot.Dropper2.setPosition(0.0);
-        }else {
-            robot.Dropper1.setPosition(0.5);
-            robot.Dropper2.setPosition(0.5);
         }
-        if(gamepad2.b){
+        
+        if(gamepad2.right_bumper){
+            robot.Wrist.setPosition(0.6);
+
+        }else {
             robot.Wrist.setPosition(0.0);
 
-        }else {
-            robot.Wrist.setPosition(0.5);
-
         }
-
-        //robot.Dropper1.setPosition((gamepad2.a) ? 0.0 : 1.0);
-        //robot.Dropper2.setPosition((gamepad2.b) ? 0.0 : 1.0);
 
 
         // Show the elapsed game time and wheel power.
