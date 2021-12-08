@@ -1,30 +1,35 @@
 package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
+import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.qualcomm.robotcore.exception.RobotCoreException;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.Gamepad;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.util.Range;
 
-@TeleOp(name="TeleOpProgram", group="Iterative Opmode")
-public class TeleOpProgram extends OpMode
+@TeleOp(name="TeleOpProgram", group="Linear Opmode")
+public class TeleOpProgram extends LinearOpMode
 {
     // Declare OpMode members.
 
     Robot robot = new Robot();
     private ElapsedTime runtime = new ElapsedTime();
-    double xNew = 1.0;
-   // private DcMotor intakeLifter = null;
-    // this is a comment
 
-    /*
-     * Code to run ONCE when the driver hits INIT
-     */
     @Override
-    public void init() {
+    public void runOpMode() {
+        double xNew = 1.0;
+        // private DcMotor intakeLifter = null;
+        // this is a comment
+
+        /*
+         * Code to run ONCE when the driver hits INIT
+         */
+
         telemetry.addData("Status", "Initialized");
 
         robot.init(hardwareMap);
@@ -33,51 +38,45 @@ public class TeleOpProgram extends OpMode
         // Initialize the hardware variables. Note that the strings used here as parameters
         // to 'get' must correspond to the names assigned during the robot configuration
         // step (using the FTC Robot Controller app on the phone).
-        
 
-    }
 
-    /*
-     * Code to run REPEATEDLY after the driver hits INIT, but before they hit PLAY
-     */
-    @Override
-    public void init_loop() {
-    }
 
-    /*
-     * Code to run ONCE when the driver hits PLAY
-     */
-    @Override
-    public void start() {
+
+        /*
+         * Code to run REPEATEDLY after the driver hits PLAY but before they hit STOP
+         */
+        boolean gamepad2XIsPressed = false;
+        boolean slow = false;
+        String currentMode = "Speed";
+
+//    public enum GrabState {
+//        GRAB_START,
+//        GRAB_MOVE_DOWN,
+//        LIFT_DUMP,
+//        LIFT_RETRACT
+//    };
+        waitForStart();
         runtime.reset();
-    }
 
-    /*
-     * Code to run REPEATEDLY after the driver hits PLAY but before they hit STOP
-     */
-    boolean bumperWasHeld = false;
-    boolean slow = false;
-    String currentMode = "Speed";
+        while (opModeIsActive()) {
+            // Setup a variable for each drive wheel to save power level for telemetry
+            double lfPower;
+            double lbPower;
+            double rfPower;
+            double rbPower;
 
-    @Override
-    public void loop() {
-        // Setup a variable for each drive wheel to save power level for telemetry
-        double lfPower;
-        double lbPower;
-        double rfPower;
-        double rbPower;
+            // Choose to drive using either Tank Mode, or POV Mode
+            // Comment out the method that's not used.  The default below is POV.
 
-        // Choose to drive using either Tank Mode, or POV Mode
-        // Comment out the method that's not used.  The default below is POV.
+            // POV Mode uses left stick to go forward, and right stick to turn.
+            // - This uses basic math to combine motions and is easier to drive straight.
+            double drive = gamepad1.left_stick_y;
+            double turn = gamepad1.right_stick_x;
 
-        // POV Mode uses left stick to go forward, and right stick to turn.
-        // - This uses basic math to combine motions and is easier to drive straight.
-        double drive = gamepad1.left_stick_y;
-        double turn  =  gamepad1.right_stick_x;
-        double x = 1.0;
+            double x = 1.0;
 
 
-      //  boolean wasPressed = gamepad1.right_bumper && !bumperWasHeld;
+            //  boolean wasPressed = gamepad1.right_bumper && !bumperWasHeld;
 //
 //        if(wasPressed){
 //
@@ -108,50 +107,50 @@ public class TeleOpProgram extends OpMode
 //
 //        bumperWasHeld = gamepad1.right_bumper;
 
-        if(gamepad1.right_bumper){
-            x/=3;
-            currentMode = "Precision";
-        }else{
-            x = 1.0;
-            currentMode = "Sped. I am sped";
-        }
+            if (gamepad1.right_bumper) {
+                x /= 3;
+                currentMode = "Precision";
+            } else {
+                x = 1.0;
+                currentMode = "Sped. I am sped";
+            }
 
-        if(gamepad1.left_stick_y<0){
-            robot.lbDrive.setPower(-x);
-            robot.rbDrive.setPower(-x);
-            robot.lfDrive.setPower(-x);
-            robot.rfDrive.setPower(-x);
-        }else if(gamepad1.left_stick_y>0) {
-            robot.lbDrive.setPower(x);
-            robot.rbDrive.setPower(x);
-            robot.lfDrive.setPower(x);
-            robot.rfDrive.setPower(x);
-        } else if(gamepad1.left_trigger>0){
-            robot.lbDrive.setPower(x);
-            robot.rbDrive.setPower(-x);
-            robot.lfDrive.setPower(-x);
-            robot.rfDrive.setPower(x);
-        }else if(gamepad1.right_trigger>0){
-            robot.lbDrive.setPower(-x);
-            robot.rbDrive.setPower(x);
-            robot.lfDrive.setPower(x);
-            robot.rfDrive.setPower(-x);
-        }else if(gamepad1.right_stick_x<0){
-            robot.lbDrive.setPower(-x);
-            robot.rbDrive.setPower(x);
-            robot.lfDrive.setPower(-x);
-            robot.rfDrive.setPower(x);
-        }else if(gamepad1.right_stick_x>0){
-            robot.lbDrive.setPower(x);
-            robot.rbDrive.setPower(-x);
-            robot.lfDrive.setPower(x);
-            robot.rfDrive.setPower(-x);
-        } else {
-            robot.lbDrive.setPower(0.0);
-            robot.rbDrive.setPower(0.0);
-            robot.lfDrive.setPower(0.0);
-            robot.rfDrive.setPower(0.0);
-        }
+            if (gamepad1.left_stick_y < 0) {
+                robot.lbDrive.setPower(-x);
+                robot.rbDrive.setPower(-x);
+                robot.lfDrive.setPower(-x);
+                robot.rfDrive.setPower(-x);
+            } else if (gamepad1.left_stick_y > 0) {
+                robot.lbDrive.setPower(x);
+                robot.rbDrive.setPower(x);
+                robot.lfDrive.setPower(x);
+                robot.rfDrive.setPower(x);
+            } else if (gamepad1.left_trigger > 0) {
+                robot.lbDrive.setPower(x);
+                robot.rbDrive.setPower(-x);
+                robot.lfDrive.setPower(-x);
+                robot.rfDrive.setPower(x);
+            } else if (gamepad1.right_trigger > 0) {
+                robot.lbDrive.setPower(-x);
+                robot.rbDrive.setPower(x);
+                robot.lfDrive.setPower(x);
+                robot.rfDrive.setPower(-x);
+            } else if (gamepad1.right_stick_x < 0) {
+                robot.lbDrive.setPower(-x);
+                robot.rbDrive.setPower(x);
+                robot.lfDrive.setPower(-x);
+                robot.rfDrive.setPower(x);
+            } else if (gamepad1.right_stick_x > 0) {
+                robot.lbDrive.setPower(x);
+                robot.rbDrive.setPower(-x);
+                robot.lfDrive.setPower(x);
+                robot.rfDrive.setPower(-x);
+            } else {
+                robot.lbDrive.setPower(0.0);
+                robot.rbDrive.setPower(0.0);
+                robot.lfDrive.setPower(0.0);
+                robot.rfDrive.setPower(0.0);
+            }
 
 //        double y = gamepad1.left_stick_y; // Remember, this is reversed!
 //        double x = gamepad1.left_stick_x * 1.1; // Counteract imperfect strafing
@@ -186,55 +185,83 @@ public class TeleOpProgram extends OpMode
 //            robot.rbDrive.setPower(backRightPower);
 //        }
 
+            if (gamepad2.x && !gamepad2XIsPressed) {
+                telemetry.addData("tes", "bueno");
+
+                robot.arm.setPower(0.4);
+                robot.sleep(500);
 
 
+                robot.Dropper1.setPosition(0.25);
+                robot.Dropper2.setPosition(0.25);
+                robot.Wrist.setPosition(0.6);
+
+                robot.sleep(500);
+                robot.arm.setPower(0.1);
+                robot.sleep(500);
+                robot.sleep(1000);
+
+                robot.Dropper1.setPosition(0.0);
+                robot.Dropper2.setPosition(0.0);
+                robot.sleep(500);
+                robot.arm.setPower(-0.6);
+                robot.sleep(500);
+                robot.Wrist.setPosition(0.0);
+                robot.sleep(500);
+                robot.sleep(1000);
 
 
-        robot.arm.setPower((gamepad2.right_trigger/1.5) - (gamepad2.left_trigger/1.5));
-        //robot.carousel.setPower(((gamepad2.right_bumper) ? 1.0: 0.0)-((gamepad2.left_bumper) ? -1.0: 0.0));
-        if(gamepad2.dpad_right){
-            robot.carousel.setPower(1.0);
-        }else{
-            robot.carousel.setPower(0.0);
+//            robot.Dropper1.setPosition(0.0);
+//            robot.Dropper2.setPosition(0.0);
+//
+//            robot.sleep(100);
+//
+//            robot.sleep(100);
+
+            } else {
+                telemetry.addData("no", "bueno");
+            }
+
+
+            robot.arm.setPower((gamepad2.right_trigger / 1.5) - (gamepad2.left_trigger / 1.5));
+            //robot.carousel.setPower(((gamepad2.right_bumper) ? 1.0: 0.0)-((gamepad2.left_bumper) ? -1.0: 0.0));
+            if (gamepad2.dpad_right) {
+                robot.carousel.setPower(1.0);
+            } else {
+                robot.carousel.setPower(0.0);
+            }
+
+            if (gamepad2.dpad_left) {
+                robot.carousel.setPower(-1.0);
+            } else {
+                robot.carousel.setPower(0.0);
+            }
+
+            //todo monkey
+//        if(gamepad2.a){
+//            robot.Dropper1.setPosition(0.25);
+//            robot.Dropper2.setPosition(0.25);
+//        }else {
+//            robot.Dropper1.setPosition(0.0);
+//            robot.Dropper2.setPosition(0.0);
+//        }
+
+
+            if (gamepad2.right_bumper) {
+                robot.Wrist.setPosition(0.6);
+
+            } else {
+                robot.Wrist.setPosition(0.0);
+
+            }
+
+
+            gamepad2XIsPressed = gamepad2.x;
+
+            // Show the elapsed game time and wheel power.
+            telemetry.addData("Status", "Run Time: " + runtime.toString());
+            telemetry.addData("Current Mode:", currentMode);
+
         }
-
-        if(gamepad2.dpad_left){
-            robot.carousel.setPower(-1.0);
-        }else{
-            robot.carousel.setPower(0.0);
-        }
-
-        if(gamepad2.a){
-            robot.Dropper1.setPosition(0.25);
-            robot.Dropper2.setPosition(0.25);
-        }else {
-            robot.Dropper1.setPosition(0.0);
-            robot.Dropper2.setPosition(0.0);
-        }
-        
-        if(gamepad2.right_bumper){
-            robot.Wrist.setPosition(0.6);
-
-        }else {
-            robot.Wrist.setPosition(0.0);
-
-        }
-
-
-        // Show the elapsed game time and wheel power.
-        telemetry.addData("Status", "Run Time: " + runtime.toString());
-        telemetry.addData("Current Mode:", currentMode);
-
-    }
-
-
-    /*
-     * Code to run ONCE after the driver hits STOP
-     */
-    @Override
-    public void stop() {
-    }
-
-    }
-
+    };}
 

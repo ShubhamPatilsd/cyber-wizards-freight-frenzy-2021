@@ -25,6 +25,13 @@ public class Robot {
     public Servo Dropper2 = null;
     public Servo Wrist = null;
 
+    public void sleep(long time){
+        try{
+            Thread.sleep(time);
+        }catch(InterruptedException e){
+            e.printStackTrace();
+        }
+    }
 
     public void init(HardwareMap hardwareMap){
         rfDrive = hardwareMap.get(DcMotor.class, "rfDrive");
